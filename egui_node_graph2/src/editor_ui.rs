@@ -498,6 +498,7 @@ where
                 2.0,
                 bg_color,
                 Stroke::new(3.0, stroke_color),
+                StrokeKind::Middle,
             );
 
             self.selected_nodes = node_rects
@@ -1065,22 +1066,23 @@ where
 
         let (shape, outline) = {
             let rounding_radius = 4.0 * pan_zoom.zoom;
-            let rounding = Rounding::same(rounding_radius);
+            let rounding = CornerRadius::same(rounding_radius as u8);
 
             let titlebar_height = title_height + margin.y;
             let titlebar_rect =
                 Rect::from_min_size(outer_rect.min, vec2(outer_rect.width(), titlebar_height));
             let titlebar = Shape::Rect(RectShape {
                 rect: titlebar_rect,
-                rounding,
+                corner_radius: rounding,
                 fill: self.graph[self.node_id]
                     .user_data
                     .titlebar_color(ui, self.node_id, self.graph, user_state)
                     .unwrap_or_else(|| background_color.lighten(0.8)),
                 stroke: Stroke::NONE,
                 blur_width: 0.0,
-                fill_texture_id: Default::default(),
-                uv: Rect::ZERO,
+                round_to_pixels: None,
+                brush: None,
+                stroke_kind: StrokeKind::Inside,
             });
 
             let body_rect = Rect::from_min_size(
@@ -1089,12 +1091,13 @@ where
             );
             let body = Shape::Rect(RectShape {
                 rect: body_rect,
-                rounding: Rounding::ZERO,
+                corner_radius: CornerRadius::ZERO,
                 fill: background_color,
                 stroke: Stroke::NONE,
                 blur_width: 0.0,
-                fill_texture_id: Default::default(),
-                uv: Rect::ZERO,
+                round_to_pixels: None,
+                brush: None,
+                stroke_kind: StrokeKind::Inside,
             });
 
             let bottom_body_rect = Rect::from_min_size(
@@ -1103,24 +1106,26 @@ where
             );
             let bottom_body = Shape::Rect(RectShape {
                 rect: bottom_body_rect,
-                rounding,
+                corner_radius: rounding,
                 fill: background_color,
                 stroke: Stroke::NONE,
                 blur_width: 0.0,
-                fill_texture_id: Default::default(),
-                uv: Rect::ZERO,
+                round_to_pixels: None,
+                brush: None,
+                stroke_kind: StrokeKind::Inside,
             });
 
             let node_rect = titlebar_rect.union(body_rect).union(bottom_body_rect);
             let outline = if self.selected {
                 Shape::Rect(RectShape {
                     rect: node_rect.expand(1.0 * pan_zoom.zoom),
-                    rounding,
+                    corner_radius: rounding,
                     fill: Color32::WHITE.lighten(0.8),
                     stroke: Stroke::NONE,
                     blur_width: 0.0,
-                    fill_texture_id: Default::default(),
-                    uv: Rect::ZERO,
+                    round_to_pixels: None,
+                    brush: None,
+                    stroke_kind: StrokeKind::Inside,
                 })
             } else {
                 Shape::Noop

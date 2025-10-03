@@ -132,7 +132,7 @@ where
         user_state: &mut UserState,
         prepend_responses: Vec<NodeResponse<UserResponse, NodeData>>,
     ) -> GraphResponse<UserResponse, NodeData> {
-        // ui.set_clip_rect(ui.max_rect());
+        ui.set_clip_rect(ui.max_rect());
         let clip_rect = ui.clip_rect();
         // Zoom may have never taken place, so ensure we use parent style
         if !self.pan_zoom.started {
@@ -200,8 +200,7 @@ where
         // This causes the graph editor to use as much free space as it can.
         // (so for windows it will use up to the resizeably set limit
         // and for a Panel it will fill it completely)
-        // let editor_rect = ui.max_rect();
-        let editor_rect = ui.clip_rect();
+        let editor_rect = ui.max_rect();
         let resp = ui.allocate_rect(editor_rect, Sense::hover());
 
         let cursor_pos = ui
